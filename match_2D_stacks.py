@@ -127,10 +127,8 @@ def match_stack_axis(data_dir, axis):
 	except:
 		img = pickle.load(bz2.BZ2File(join(data_dir, 'mask_' + axis + '.pickle'), 'r'))
 	new_img = [img[0]]
-	# new_img = np.expand_dims(new_img, 0)
 	for slice_num in range(1, img.shape[0]):
 		print("Matching", slice_num)
-	# for slice_num in range(1, 3):
 		img_current_slice = new_img[slice_num-1].astype(int)
 		img_new_slice = img[slice_num].astype(int)
 		current_slice_cell_coords = get_indices_sparse(img_current_slice)[1:]

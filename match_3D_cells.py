@@ -195,10 +195,7 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_dir):
 
 	X_max = np.max(mask_YZ) + 1
 	Y_max = np.max(mask_XZ) + 1
-	Z_max = np.max(mask_XY) + 1
 	new_mask = np.zeros(mask_XY.shape)
-	index_list = [0]
-	index_cumulative = [0]
 
 	
 	for z in range(mask_XY.shape[0]):
@@ -216,7 +213,6 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_dir):
 				new_mask[z, x, y] = index_1D
 
 	new_mask = new_mask.astype(int)
-	new_mask_original_index = np.unique(new_mask).tolist()
 	new_coords = get_indices_pandas(new_mask)
 
 	max_z = new_mask.shape[0]

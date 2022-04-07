@@ -10,22 +10,6 @@ import tifffile
 import matplotlib.pyplot as plt
 from aicsimageio import AICSImage
 
-def show_plt(img):
-	plt.imshow(img)
-	plt.show()
-	plt.clf()
-	
-def laplacian_variance(img):
-	return np.var(cv.Laplacian(img, cv.CV_64F, ksize=21))
-
-
-def find_best_z_plane_id(img_stack):
-	lap_vars_per_z_plane = []
-	for z in range(img_stack.shape[0]):
-		lap_vars_per_z_plane.append(laplacian_variance(img_stack[z,...]))
-	max_var = max(lap_vars_per_z_plane)
-	max_var_id = lap_vars_per_z_plane.index(max_var)
-	return max_var_id
 
 def get_channel_names(img_dir):
 	
