@@ -29,7 +29,6 @@ def find_best_z_plane_id(img_stack):
 
 def get_channel_names(img_dir):
 	
-	# with tifffile.TiffFile('/data/hubmap/data/CODEX/HBM897.BMRQ.526/R001_X002_Y002/R001_X002_Y002.ome.tiff') as tif:
 	with tifffile.TiffFile(img_dir) as tif:
 		tif_tags = {}
 		for tag in tif.pages[0].tags.values():

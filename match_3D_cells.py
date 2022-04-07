@@ -187,44 +187,42 @@ def match_repair_cell_nucleus(nuclear_slice, cell_slice):
 	return cell_matched_mask, nuclear_matched_mask
 
 
-def match_3D_cells(img_XY, img_XZ, img_YZ, data_dir):
+def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_dir):
  
 
-	img_XZ = np.rot90(img_XZ, k=1, axes=(0, 2))
-	img_YZ = np.rot90(img_YZ, k=1, axes=(0, 1))
+	mask_XZ = np.rot90(mask_XZ, k=1, axes=(0, 2))
+	mask_YZ = np.rot90(mask_YZ, k=1, axes=(0, 1))
 
-	
-
-	X_max = np.max(img_YZ) + 1
-	Y_max = np.max(img_XZ) + 1
-	Z_max = np.max(img_XY) + 1
-	new_img = np.zeros(img_XY.shape)
+	X_max = np.max(mask_YZ) + 1
+	Y_max = np.max(mask_XZ) + 1
+	Z_max = np.max(mask_XY) + 1
+	new_mask = np.zeros(mask_XY.shape)
 	index_list = [0]
 	index_cumulative = [0]
 
 	
-	for z in range(img_XY.shape[0]):
-		for x in range(img_XY.shape[1]):
-			for y in range(img_XY.shape[2]):
-				Z = img_XY[z, x, y]
-				Y = img_XZ[z, x, y]
-				X = img_YZ[z, x, y]
+	for z in range(mask_XY.shape[0]):
+		for x in range(mask_XY.shape[1]):
+			for y in range(mask_XY.shape[2]):
+				Z = mask_XY[z, x, y]
+				Y = mask_XZ[z, x, y]
+				X = mask_YZ[z, x, y]
 
 				if Z == 0:
 					index_1D = 0
 				else:
 					index_1D = X + Y * X_max + Z * X_max * Y_max
 
-				new_img[z, x, y] = index_1D
+				new_mask[z, x, y] = index_1D
 
-	new_img = new_img.astype(int)
-	new_img_original_index = np.unique(new_img).tolist()
-	new_coords = get_indices_pandas(new_img)
+	new_mask = new_mask.astype(int)
+	new_mask_original_index = np.unique(new_mask).tolist()
+	new_coords = get_indices_pandas(new_mask)
 
-	max_z = new_img.shape[0]
-	max_x = new_img.shape[1]
-	max_y = new_img.shape[2]
-	mask_binary = np.zeros(new_img.shape, dtype=int)
+	max_z = new_mask.shape[0]
+	max_x = new_mask.shape[1]
+	max_y = new_mask.shape[2]
+	mask_binary = np.zeros(new_mask.shape, dtype=int)
 	for index in new_coords.index[1:]:
 		if len(new_coords[index][0]) < 100:
 			
@@ -244,8 +242,8 @@ def match_3D_cells(img_XY, img_XZ, img_YZ, data_dir):
 			mask_binary_boundary_indices[1] = mask_binary_boundary_indices[1] + x_min
 			mask_binary_boundary_indices[2] = mask_binary_boundary_indices[2] + y_min
 			mask_binary_boundary_indices = tuple(mask_binary_boundary_indices)
-			boundary_XY_cell_indices = img_XY[mask_binary_boundary_indices]
-			boundary_3D_cell_indices = new_img[mask_binary_boundary_indices]
+			boundary_XY_cell_indices = mask_XY[mask_binary_boundary_indices]
+			boundary_3D_cell_indices = new_mask[mask_binary_boundary_indices]
 			
 			boundary_3D_cell_indices_matched = boundary_3D_cell_indices[np.where(boundary_XY_cell_indices == Z)]
 			boundary_3D_cell_indices_matched = boundary_3D_cell_indices_matched[boundary_3D_cell_indices_matched != index]
@@ -254,18 +252,18 @@ def match_3D_cells(img_XY, img_XZ, img_YZ, data_dir):
 
 				value, count = Counter(boundary_3D_cell_indices_matched).most_common()[0]
 				if len(new_coords[value][0]) < 100:
-					new_img[new_coords[index]] = 0
+					new_mask[new_coords[index]] = 0
 				else:
-					new_img[new_coords[index]] = value
+					new_mask[new_coords[index]] = value
 			else:
-				new_img[new_coords[index]] = 0
+				new_mask[new_coords[index]] = 0
 	
 
-	new_coords_no_bits = get_indices_pandas(new_img)
+	new_coords_no_bits = get_indices_pandas(new_mask)
 
-	XY_coords = get_indices_sparse(img_XY.astype(int))
+	XY_coords = get_indices_sparse(mask_XY.astype(int))
 
-	new_img_imput = new_img.copy()
+	new_mask_imput = new_mask.copy()
 	for index in new_coords_no_bits.index[1:]:
 		new_coords_no_bits_index = new_coords_no_bits[index]
 		Z = int(index // (X_max * Y_max))
@@ -282,17 +280,17 @@ def match_3D_cells(img_XY, img_XZ, img_YZ, data_dir):
 		XY_coords_Z[1] = XY_coords_Z[1][impute_range]
 		XY_coords_Z[2] = XY_coords_Z[2][impute_range]
 		XY_coords_Z = tuple(XY_coords_Z)
-		new_img_imput[XY_coords_Z] = index
-	new_coords_no_bits_imputed = get_indices_pandas(new_img_imput)
+		new_mask_imput[XY_coords_Z] = index
+	new_coords_no_bits_imputed = get_indices_pandas(new_mask_imput)
 
 
-	new_img_imputed = np.zeros(new_img.shape)
+	new_mask_imputed = np.zeros(new_mask.shape)
 	for index in new_coords_no_bits_imputed.index[1:]:
-		new_img_imputed[new_coords_no_bits_imputed[index]] = index
+		new_mask_imputed[new_coords_no_bits_imputed[index]] = index
 
 	
-	nuclear_slice = np.load(join(data_dir, '/nuclear_mask_XY.npy'))
-	cell_mask_3D = new_img_imputed
+	nuclear_slice = np.load(join(data_dir, 'nuclear_mask_XY.npy'))
+	cell_mask_3D = new_mask_imputed
 	
 	repaired_nuclear_slices = []
 	matched_cell_slices = []
@@ -311,7 +309,7 @@ def match_3D_cells(img_XY, img_XZ, img_YZ, data_dir):
 	image = np.stack((matched_cell_3D, matched_nuclear_3D, matched_cell_membrane_3D, matched_nuclear_membrane_3D))
 
 	channel_names = ['cells', 'nuclei', 'cell_boundaries', 'nucleus_boundaries']
-	OmeTiffWriter.save(image, join(data_dir, 'mask_3D.ome.tiff'), channel_names=channel_names)
+	OmeTiffWriter.save(image, join(output_dir, 'mask_3D.ome.tiff'), channel_names=channel_names)
 	
 	
 	return image

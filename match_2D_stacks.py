@@ -121,15 +121,11 @@ def get_unmatched_list(matched_list, total_num):
 		unmatched_list.append(new_slice_cell_coords[unmatched_list_index[i]])
 	return unmatched_list, unmatched_list_index
 
-def match_stack_axis(data_dir, method, axis):
-	# data_dir = '/data3/HuBMAP/3D/IMC_3D/florida-3d-imc/d3130f4a89946cc6b300b115a3120b7a/random_gaussian_0'
-	# data_dir = sys.argv[1]
-	# method = sys.argv[2]
-	# axis = sys.argv[3]
+def match_stack_axis(data_dir, axis):
 	try:
-		img = np.load(join(data_dir, 'mask_' + method + '_' + axis + '.npy'))
+		img = np.load(join(data_dir, 'mask_' + axis + '.npy'))
 	except:
-		img = pickle.load(bz2.BZ2File(join(data_dir, 'mask_' + method + '_' + axis + '.pickle'), 'r'))
+		img = pickle.load(bz2.BZ2File(join(data_dir, 'mask_' + axis + '.pickle'), 'r'))
 	new_img = [img[0]]
 	# new_img = np.expand_dims(new_img, 0)
 	for slice_num in range(1, img.shape[0]):
@@ -172,34 +168,18 @@ def match_stack_axis(data_dir, method, axis):
 					new_slice_cell_matched_index_list.append(j_ind)
 		
 		
-		# current_slice_cell_unmatched_index_list = get_unmatched_index_list(current_slice_cell_matched_index_list, len(current_slice_cell_coords))
 		new_slice_cell_unmatched_list, new_slice_cell_unmatched_index_list = get_unmatched_list(new_slice_cell_matched_index_list, len(new_slice_cell_coords))
 		
-		# current_slice_cell_matched_mask = get_mask(current_slice_cell_matched_list)
-		# new_slice_matched_mask = get_mask(new_slice_cell_matched_list)
 		new_slice_updated_mask = get_new_slice_mask(current_slice_cell_matched_index_list, new_slice_cell_matched_list, new_slice_cell_unmatched_list, len(np.unique(new_img[:slice_num])))
-		# new_slice_updated_mask = np.expand_dims(new_slice_updated_mask, 0)
-		# new_img = np.vstack((new_img, new_slice_updated_mask))
 		new_img.append(new_slice_updated_mask)
 	new_img = np.dstack(new_img)
 	new_img = np.moveaxis(new_img, 2, 0)
 	
-	# np.save(join(data_dir, 'mask_' + method + '_matched_stack_' + axis + '.npy'), new_img)
-	# pickle.dump(new_img, bz2.BZ2File(join(data_dir, 'mask_' + method + '_matched_stack_' + axis + '.pickle'), 'wb'))
 	return new_img
-	
-	# new_img = np.load(join(data_dir, 'new_img' + axis + '.npy'))
-	new_img_coords = get_indices_sparse(new_img.astype(int))[1:]
-	
-	for i in reversed(range(len(new_img_coords))):
-		if len(np.unique(new_img_coords[i][0])) < 3:
-			del new_img_coords[i]
-	new_img_coords = list(map(lambda x: np.array(x).T, new_img_coords))
-	# pickle.dump(new_img_coords, bz2.BZ2File(join(data_dir, 'mask_' + method + '_matched_stack_coords_' + axis + '.pickle'), 'wb'))
-	return new_img_coords
+
 
 def match_stacks(data_dir):
-	match_stack_XY, match_stack_XY_coords = match_stack_axis(data_dir, 'deepcell_new', 'XY')
-	match_stack_XZ, match_stack_XZ_coords = match_stack_axis(data_dir, 'deepcell_new', 'XZ')
-	match_stack_YZ, match_stack_YZ_coords = match_stack_axis(data_dir, 'deepcell_new', 'YZ')
+	match_stack_XY = match_stack_axis(data_dir, 'XY')
+	match_stack_XZ = match_stack_axis(data_dir, 'XZ')
+	match_stack_YZ = match_stack_axis(data_dir, 'YZ')
 	return match_stack_XY, match_stack_XZ, match_stack_YZ
