@@ -1,14 +1,6 @@
-from skimage.io import imread, imsave
-from skimage.external.tifffile import TiffFile
-import numpy as np
-from os.path import join
-import os
-import argparse
-import cv2 as cv
-from typing import List
+from skimage.io import imread
 import tifffile
-import matplotlib.pyplot as plt
-from aicsimageio import AICSImage
+
 
 
 def get_channel_names(img_dir):
@@ -32,11 +24,12 @@ def get_channel_names(img_dir):
 	return name_list
 	
 def IMC_3D_input_channels(img_dir):
+	# find nuclear, cytoplasmic, cell membrane as input for 3D segmentation
 	image = imread(img_dir)
 	channel_names = get_channel_names(img_dir)
-	nucleus_channel_idx = channel_names.index('Ir191')
-	cytoplasm_channel_idx = channel_names.index('In115')
-	membrane_channel_idx = channel_names.index('La139')
+	nucleus_channel_idx = channel_names.index('Ir191') # Iridium
+	cytoplasm_channel_idx = channel_names.index('In115') # SMA
+	membrane_channel_idx = channel_names.index('La139') # E-Cad/P-Cad
 	nucleus_channel = image[:, nucleus_channel_idx, :, :]
 	cytoplasm_channel = image[:, cytoplasm_channel_idx, :, :]
 	membrane_channel = image[:, membrane_channel_idx, :, :]

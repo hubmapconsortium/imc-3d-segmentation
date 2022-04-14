@@ -31,8 +31,6 @@ def get_matched_cells(current_cell_arr, new_cell_arr):
 	else:
 		return False, False, False
 
-
-
 def append_coord(rlabel_mask, indices, maxvalue):
 	masked_imgs_coord = [[[], []] for i in range(maxvalue)]
 	for i in range(0, len(rlabel_mask)):
@@ -102,8 +100,8 @@ def get_mask(cell_list):
 		mask[tuple(cell_list[cell_num].T)] = cell_num
 	return mask
 
-def get_new_slice_mask(current_matched_index, new_matched, new_unmatched, max_cell_num):
-	mask = np.zeros((img_current_slice.shape))
+def get_new_slice_mask(current_matched_index, new_matched, new_unmatched, max_cell_num, img_current_slice_shape):
+	mask = np.zeros(img_current_slice_shape)
 	for cell_num in range(len(new_matched)):
 		mask[tuple(new_matched[cell_num].T)] = current_matched_index[cell_num]+1
 	for cell_num in range(len(new_unmatched)):
@@ -111,14 +109,15 @@ def get_new_slice_mask(current_matched_index, new_matched, new_unmatched, max_ce
 	return mask.astype(int)
 
 
-def get_unmatched_list(matched_list, total_num):
+def get_unmatched_list(matched_list, new_cell_coords):
+	total_num = len(new_cell_coords)
 	unmatched_list_index = []
 	for i in range(total_num):
 		if i not in matched_list:
 			unmatched_list_index.append(i)
 	unmatched_list = []
 	for i in range(len(unmatched_list_index)):
-		unmatched_list.append(new_slice_cell_coords[unmatched_list_index[i]])
+		unmatched_list.append(new_cell_coords[unmatched_list_index[i]])
 	return unmatched_list, unmatched_list_index
 
 def match_stack_axis(data_dir, axis):
@@ -128,7 +127,7 @@ def match_stack_axis(data_dir, axis):
 		img = pickle.load(bz2.BZ2File(join(data_dir, 'mask_' + axis + '.pickle'), 'r'))
 	new_img = [img[0]]
 	for slice_num in range(1, img.shape[0]):
-		print("Matching", slice_num)
+		print('Matching', axis, 'axis', 'slice', slice_num)
 		img_current_slice = new_img[slice_num-1].astype(int)
 		img_new_slice = img[slice_num].astype(int)
 		current_slice_cell_coords = get_indices_sparse(img_current_slice)[1:]
@@ -166,9 +165,9 @@ def match_stack_axis(data_dir, axis):
 					new_slice_cell_matched_index_list.append(j_ind)
 		
 		
-		new_slice_cell_unmatched_list, new_slice_cell_unmatched_index_list = get_unmatched_list(new_slice_cell_matched_index_list, len(new_slice_cell_coords))
+		new_slice_cell_unmatched_list, new_slice_cell_unmatched_index_list = get_unmatched_list(new_slice_cell_matched_index_list, new_slice_cell_coords)
 		
-		new_slice_updated_mask = get_new_slice_mask(current_slice_cell_matched_index_list, new_slice_cell_matched_list, new_slice_cell_unmatched_list, len(np.unique(new_img[:slice_num])))
+		new_slice_updated_mask = get_new_slice_mask(current_slice_cell_matched_index_list, new_slice_cell_matched_list, new_slice_cell_unmatched_list, len(np.unique(new_img[:slice_num])), img_current_slice.shape)
 		new_img.append(new_slice_updated_mask)
 	new_img = np.dstack(new_img)
 	new_img = np.moveaxis(new_img, 2, 0)
@@ -177,7 +176,10 @@ def match_stack_axis(data_dir, axis):
 
 
 def match_stacks(data_dir):
-	match_stack_XY = match_stack_axis(data_dir, 'XY')
-	match_stack_XZ = match_stack_axis(data_dir, 'XZ')
-	match_stack_YZ = match_stack_axis(data_dir, 'YZ')
-	return match_stack_XY, match_stack_XZ, match_stack_YZ
+	matched_stack_XY = match_stack_axis(data_dir, 'XY')
+	matched_stack_XZ = match_stack_axis(data_dir, 'XZ')
+	matched_stack_YZ = match_stack_axis(data_dir, 'YZ')
+	np.save(join(data_dir, 'matched_stack_XY.npy'), match_stack_XY)
+	np.save(join(data_dir, 'matched_stack_XZ.npy'), match_stack_XZ)
+	np.save(join(data_dir, 'matched_stack_YZ.npy'), match_stack_YZ)
+	return matched_stack_XY, matched_stack_XZ, matched_stack_YZ

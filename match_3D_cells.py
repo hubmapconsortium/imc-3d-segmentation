@@ -17,18 +17,24 @@ def get_compartments_diff(arr1, arr2):
 	diff = np.array(list(a - b))
 	return diff
 
-
-def get_matched_cells(current_cell_arr, new_cell_arr):
-	a = set((tuple(i) for i in current_cell_arr))
-	b = set((tuple(i) for i in new_cell_arr))
-	# mismatch_pixel = list(c - d)
-	# match_pixel_num = len(list(d & c))
-	JI = len(list(a & b)) / len(list(a | b))
-	if JI != 0:
-		return np.array(list(a)), np.array(list(b)), JI
+def get_matched_cells(cell_arr, cell_membrane_arr, nuclear_arr, mismatch_repair):
+	a = set((tuple(i) for i in cell_arr))
+	b = set((tuple(i) for i in cell_membrane_arr))
+	c = set((tuple(i) for i in nuclear_arr))
+	d = a - b
+	mismatch_pixel_num = len(list(c - d))
+	# print(mismatch_pixel_num)
+	mismatch_fraction = len(list(c - d)) / len(list(c))
+	if not mismatch_repair:
+		if mismatch_pixel_num == 0:
+			return np.array(list(a)), np.array(list(c)), 0
+		else:
+			return False, False, False
 	else:
-		return False, False, False
-
+		if mismatch_pixel_num < len(c):
+			return np.array(list(a)), np.array(list(d & c)), mismatch_fraction
+		else:
+			return False, False, False
 
 
 def append_coord(rlabel_mask, indices, maxvalue):
@@ -94,8 +100,8 @@ def get_boundary(mask):
 	mask_boundary_indexed = get_indexed_mask(mask, mask_boundary)
 	return mask_boundary_indexed
 
-def get_mask(cell_list):
-	mask = np.zeros((img.shape))
+def get_mask(cell_list, mask_shape):
+	mask = np.zeros((mask_shape))
 	for cell_num in range(len(cell_list)):
 		mask[tuple(cell_list[cell_num].T)] = cell_num
 	return mask
@@ -197,7 +203,7 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_dir):
 	Y_max = np.max(mask_XZ) + 1
 	new_mask = np.zeros(mask_XY.shape)
 
-	
+	# give each pixel a unique index from 3 axes
 	for z in range(mask_XY.shape[0]):
 		for x in range(mask_XY.shape[1]):
 			for y in range(mask_XY.shape[2]):
@@ -244,6 +250,7 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_dir):
 			boundary_3D_cell_indices_matched = boundary_3D_cell_indices[np.where(boundary_XY_cell_indices == Z)]
 			boundary_3D_cell_indices_matched = boundary_3D_cell_indices_matched[boundary_3D_cell_indices_matched != index]
 			mask_binary[new_coords[index]] = 0
+			# remove small bits
 			if len(boundary_3D_cell_indices_matched) > 0:
 
 				value, count = Counter(boundary_3D_cell_indices_matched).most_common()[0]
@@ -254,11 +261,12 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_dir):
 			else:
 				new_mask[new_coords[index]] = 0
 	
-
+	
 	new_coords_no_bits = get_indices_pandas(new_mask)
 
 	XY_coords = get_indices_sparse(mask_XY.astype(int))
-
+	
+	# impute final mask according matched cells from XY axis
 	new_mask_imput = new_mask.copy()
 	for index in new_coords_no_bits.index[1:]:
 		new_coords_no_bits_index = new_coords_no_bits[index]
@@ -284,7 +292,7 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_dir):
 	for index in new_coords_no_bits_imputed.index[1:]:
 		new_mask_imputed[new_coords_no_bits_imputed[index]] = index
 
-	
+	# construct 4-channel masks
 	nuclear_slice = np.load(join(data_dir, 'nuclear_mask_XY.npy'))
 	cell_mask_3D = new_mask_imputed
 	
