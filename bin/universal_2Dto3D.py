@@ -41,6 +41,6 @@ def universal_2Dto3D(img_file: Path, mask_output_dir: Path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Universal 2D to 3D segmentation")
     parser.add_argument("img_file", type=Path)
-    parser.add_argument("mask_output_dir", type=Path)
+    parser.add_argument("mask_output_dir", type=Path, default=Path())
     args = parser.parse_args()
     four_channel_3D_mask = universal_2Dto3D(args.img_file, args.mask_output_dir)
