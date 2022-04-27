@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from argparse import ArgumentParser
+from os import fspath
 from pathlib import Path
 
 import numpy as np
@@ -10,8 +11,8 @@ from tensorflow.compat.v1 import ConfigProto, InteractiveSession
 
 
 def main(data_dir: Path, axis: str):
-    im1 = imread(data_dir / "nucleus.tif")
-    im2 = imread(data_dir / "membrane.tif")
+    im1 = imread(fspath(data_dir / "nucleus.tif"))
+    im2 = imread(fspath(data_dir / "membrane.tif"))
     z_slice_num = im1.shape[0]
 
     if axis == "XY":
