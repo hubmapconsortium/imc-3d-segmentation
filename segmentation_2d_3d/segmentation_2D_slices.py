@@ -1,3 +1,4 @@
+from os import fspath
 from pathlib import Path
 
 from skimage.io import imsave
@@ -8,9 +9,9 @@ directions = ["XY", "YZ", "XZ"]
 
 
 def segmentation(nucleus, cytoplasm, membrane, save_dir: Path):
-    imsave(save_dir / "nucleus.tif", nucleus)
-    imsave(save_dir / "cytoplasm.tif", cytoplasm)
-    imsave(save_dir / "membrane.tif", membrane)
+    imsave(fspath(save_dir / "nucleus.tif"), nucleus)
+    imsave(fspath(save_dir / "cytoplasm.tif"), cytoplasm)
+    imsave(fspath(save_dir / "membrane.tif"), membrane)
 
     for direction in directions:
         deepcell_main(save_dir, direction)
