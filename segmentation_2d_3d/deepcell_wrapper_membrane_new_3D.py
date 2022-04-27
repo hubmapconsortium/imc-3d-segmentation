@@ -57,8 +57,8 @@ def main(data_dir: Path, axis: str):
         cell_mask = labeled_image[:, :z_slice_num, :, 0]
         nuc_mask = labeled_image[:, :z_slice_num, :, 1]
 
-    imsave(data_dir / f"mask_{axis}.tif", cell_mask)
-    imsave(data_dir / f"nuclear_mask_{axis}.tif", nuc_mask)
+    imsave(fspath(data_dir / f"mask_{axis}.tif"), cell_mask)
+    imsave(fspath(data_dir / f"nuclear_mask_{axis}.tif"), nuc_mask)
 
     print(cell_mask.shape)
     np.save(data_dir / f"mask_{axis}.npy", cell_mask)
