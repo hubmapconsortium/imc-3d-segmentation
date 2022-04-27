@@ -1,1 +1,1 @@
-hubmap/segmentation_2d_3d	docker/Dockerfile	base_directory_build,write_git_json=git-revision.json
+hubmap/imc_3d_segmentation	docker/Dockerfile	base_directory_build,write_git_json=bin/git-revision.json

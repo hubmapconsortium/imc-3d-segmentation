@@ -1,0 +1,3 @@
+# Not exhaustive, since this is built on the hubmap/segmentations Docker image
+aicsimageio
+scikit-image>=0.19
