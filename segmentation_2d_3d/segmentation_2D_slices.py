@@ -1,5 +1,4 @@
 from pathlib import Path
-from tempfile import TemporaryDirectory
 
 from skimage.io import imsave
 
@@ -9,12 +8,9 @@ directions = ["XY", "YZ", "XZ"]
 
 
 def segmentation(nucleus, cytoplasm, membrane, save_dir: Path):
-    with TemporaryDirectory() as tmp_dir:
-        tmp_path = Path(tmp_dir)
+    imsave(save_dir / "nucleus.tif", nucleus)
+    imsave(save_dir / "cytoplasm.tif", cytoplasm)
+    imsave(save_dir / "membrane.tif", membrane)
 
-        imsave(tmp_path / "nucleus.tif", nucleus)
-        imsave(tmp_path / "cytoplasm.tif", cytoplasm)
-        imsave(tmp_path / "membrane.tif", membrane)
-
-        for direction in directions:
-            deepcell_main(tmp_path, direction, save_dir)
+    for direction in directions:
+        deepcell_main(save_dir, direction)

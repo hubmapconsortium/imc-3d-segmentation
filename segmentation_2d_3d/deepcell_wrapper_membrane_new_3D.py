@@ -9,9 +9,9 @@ from skimage.io import imread, imsave
 from tensorflow.compat.v1 import ConfigProto, InteractiveSession
 
 
-def main(input_dir: Path, axis: str, output_dir: Path):
-    im1 = imread(input_dir / "nucleus.tif")
-    im2 = imread(input_dir / "membrane.tif")
+def main(data_dir: Path, axis: str):
+    im1 = imread(data_dir / "nucleus.tif")
+    im2 = imread(data_dir / "membrane.tif")
     z_slice_num = im1.shape[0]
 
     if axis == "XY":
@@ -56,19 +56,18 @@ def main(input_dir: Path, axis: str, output_dir: Path):
         cell_mask = labeled_image[:, :z_slice_num, :, 0]
         nuc_mask = labeled_image[:, :z_slice_num, :, 1]
 
-    imsave(output_dir / f"mask_{axis}.tif", cell_mask)
-    imsave(output_dir / f"nuclear_mask_{axis}.tif", nuc_mask)
+    imsave(data_dir / f"mask_{axis}.tif", cell_mask)
+    imsave(data_dir / f"nuclear_mask_{axis}.tif", nuc_mask)
 
     print(cell_mask.shape)
-    np.save(output_dir / f"mask_{axis}.npy", cell_mask)
-    np.save(output_dir / f"nuclear_mask_{axis}.npy", nuc_mask)
+    np.save(data_dir / f"mask_{axis}.npy", cell_mask)
+    np.save(data_dir / f"nuclear_mask_{axis}.npy", nuc_mask)
 
 
 if __name__ == "__main__":
     p = ArgumentParser()
     p.add_argument("image_dir", type=Path)
     p.add_argument("axis")
-    p.add_argument("output_dir", type=Path, default=Path())
     args = p.parse_args()
 
-    main(args.image_dir, args.axis, args.output_dir)
+    main(args.image_dir, args.axis)
