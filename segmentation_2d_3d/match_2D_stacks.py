@@ -1,15 +1,11 @@
 import bz2
-import itertools
-import os
 import pickle
-import sys
 from os.path import join
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.io import savemat
 from scipy.sparse import csr_matrix
-from skimage.io import imread, imsave
 from skimage.segmentation import find_boundaries
 
 
@@ -25,7 +21,7 @@ def get_matched_cells(current_cell_arr, new_cell_arr):
     b = set((tuple(i) for i in new_cell_arr))
     # mismatch_pixel = list(c - d)
     # match_pixel_num = len(list(d & c))
-    JI = len(list(a & b)) / len(list(a | b))
+    JI = len(a & b) / len(a | b)
     if JI != 0:
         return np.array(list(a)), np.array(list(b)), JI
     else:
@@ -200,11 +196,11 @@ def match_stack_axis(data_dir, axis):
     return new_img
 
 
-def match_stacks(data_dir):
+def match_stacks(data_dir: Path):
     matched_stack_XY = match_stack_axis(data_dir, "XY")
     matched_stack_XZ = match_stack_axis(data_dir, "XZ")
     matched_stack_YZ = match_stack_axis(data_dir, "YZ")
-    np.save(join(data_dir, "matched_stack_XY.npy"), match_stack_XY)
-    np.save(join(data_dir, "matched_stack_XZ.npy"), match_stack_XZ)
-    np.save(join(data_dir, "matched_stack_YZ.npy"), match_stack_YZ)
+    np.save(data_dir / "matched_stack_XY.npy", matched_stack_XY)
+    np.save(data_dir / "matched_stack_XZ.npy", matched_stack_XZ)
+    np.save(data_dir / "matched_stack_YZ.npy", matched_stack_YZ)
     return matched_stack_XY, matched_stack_XZ, matched_stack_YZ
