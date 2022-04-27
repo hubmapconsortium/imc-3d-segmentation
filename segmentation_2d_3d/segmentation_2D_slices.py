@@ -3,7 +3,7 @@ from pathlib import Path
 
 from skimage.io import imsave
 
-from .deepcell_wrapper_membrane_new_3D import main as deepcell_main
+from deepcell_wrapper_membrane_new_3D import main as deepcell_main
 
 directions = ["XY", "YZ", "XZ"]
 
