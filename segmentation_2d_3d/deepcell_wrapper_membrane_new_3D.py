@@ -44,7 +44,8 @@ config.gpu_options.per_process_gpu_memory_fraction = 0.9
 tf.compat.v1.keras.backend.set_session(tf.compat.v1.Session(config=config))
 app = MultiplexSegmentation()
 
-
+predictions = [app.predict(np.expand_dims(im[i], 0), compartment="both") for i in range(len(im))]
+labeled_image = np.vstack(predictions)
 for i in range(len(im)):
     if i == 0:
         labeled_image = app.predict(np.expand_dims(im[i], 0), compartment="both")
