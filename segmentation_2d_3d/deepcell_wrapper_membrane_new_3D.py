@@ -8,6 +8,9 @@ import tensorflow as tf
 from deepcell.applications import MultiplexSegmentation
 from skimage.io import imread, imsave
 from tensorflow.compat.v1 import ConfigProto, InteractiveSession
+from tensorflow.keras.models import load_model
+
+saved_model_path = Path("/opt/.keras/models/MultiplexSegmentation")
 
 
 def main(data_dir: Path, axis: str):
@@ -39,7 +42,9 @@ def main(data_dir: Path, axis: str):
     session = InteractiveSession(config=config)
     config.gpu_options.per_process_gpu_memory_fraction = 0.9
     tf.compat.v1.keras.backend.set_session(tf.compat.v1.Session(config=config))
-    app = MultiplexSegmentation()
+    model = load_model(saved_model_path)
+    model.compile()
+    app = MultiplexSegmentation(model=model)
 
     predictions = [
         app.predict(np.expand_dims(im[i], 0), compartment="both") for i in range(len(im))
