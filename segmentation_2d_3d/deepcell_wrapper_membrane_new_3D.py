@@ -63,6 +63,7 @@ def main(data_dir: Path, axis: str):
     print(cell_mask.shape)
     np.save(data_dir / f"mask_{axis}.npy", cell_mask)
     np.save(data_dir / f"nuclear_mask_{axis}.npy", nuc_mask)
+    session.close()
 
 
 if __name__ == "__main__":
