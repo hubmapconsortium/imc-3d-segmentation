@@ -1,8 +1,9 @@
 from os import fspath
 from pathlib import Path
 
-from deepcell_wrapper_membrane_new_3D import main as deepcell_main
 from skimage.io import imsave
+
+from deepcell_wrapper_membrane_new_3D import main as deepcell_main
 
 directions = ["XY", "YZ", "XZ"]
 
