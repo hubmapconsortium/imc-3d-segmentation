@@ -4,21 +4,21 @@ cwlVersion: v1.1
 label: 3D segmentation for IMC datasets
 
 inputs:
-  image_file:
-    label: "3D OME-TIFF"
-    type: File
+  input_dir:
+    label: "Directory containing 3D OME-TIFF images"
+    type: Directory
 
 outputs:
-  mask_image_file:
-    outputSource: segmentation/mask_image_file
-    type: File
-    label: "3D segmentation mask"
+  mask_image_dir:
+    outputSource: segmentation/mask_image_dir
+    type: File[]
+    label: "3D segmentation masks, same structure as input dir"
 
 steps:
   segmentation:
     in:
-      image_file:
-        source: image_file
-    out: [mask_image_file]
+      input_dir:
+        source: input_dir
+    out: [mask_image_dir]
     run: steps/segmentation.cwl
     label: "3D IMC segmentation"

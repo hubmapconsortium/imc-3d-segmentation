@@ -8,12 +8,12 @@ requirements:
 baseCommand: "/opt/universal_2Dto3D.py"
 
 inputs:
-  image_file:
-    type: File
+  input_dir:
+    type: Directory
     inputBinding:
       position: 0
 outputs:
-  mask_image_file:
-    type: File
+  mask_image_dir:
+    type: File[]
     outputBinding:
-      glob: mask_3D.ome.tiff
+      glob: "**/*.ome.tiff"
