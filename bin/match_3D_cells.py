@@ -1,7 +1,9 @@
 import bz2
 import pickle
 from collections import Counter
+from os import fspath
 from os.path import join
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -215,7 +217,7 @@ def match_repair_cell_nucleus(nuclear_slice, cell_slice):
     return cell_matched_mask, nuclear_matched_mask
 
 
-def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_dir):
+def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_file: Path):
 
     mask_XZ = np.rot90(mask_XZ, k=1, axes=(0, 2))
     mask_YZ = np.rot90(mask_YZ, k=1, axes=(0, 1))
@@ -358,6 +360,6 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_dir):
     )
 
     channel_names = ["cells", "nuclei", "cell_boundaries", "nucleus_boundaries"]
-    OmeTiffWriter.save(image, join(output_dir, "mask_3D.ome.tiff"), channel_names=channel_names)
+    OmeTiffWriter.save(image, fspath(output_file), channel_names=channel_names)
 
     return image

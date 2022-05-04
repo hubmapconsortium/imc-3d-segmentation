@@ -1,15 +1,26 @@
 #!/usr/bin/env python3
 import argparse
+import re
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Iterable
 
 from input_channels_3D import IMC_3D_input_channels
 from match_2D_stacks import match_stacks
 from match_3D_cells import match_3D_cells
 from segmentation_2D_slices import segmentation
 
+# no path glob or fnmatch because we need the last 'f' to be optional
+OME_TIFF_PATTERN = re.compile(r".*\.ome\.tiff?")
 
-def universal_2Dto3D(img_file: Path, mask_output_dir: Path):
+
+def find_ome_tiffs(directory: Path) -> Iterable[Path]:
+    for path in directory.glob("**/*"):
+        if path.is_file() and OME_TIFF_PATTERN.match(path.name):
+            yield path
+
+
+def universal_2Dto3D(img_file: Path, output_file: Path):
     with TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
 
@@ -32,15 +43,24 @@ def universal_2Dto3D(img_file: Path, mask_output_dir: Path):
             mask_matched_XZ,
             mask_matched_YZ,
             tmp_path,
-            mask_output_dir,
+            output_file,
         )
 
     return mask_3D
 
 
+def main(input_dir: Path, output_dir: Path):
+    for ome_tiff in find_ome_tiffs(input_dir):
+        relative_ome_tiff = ome_tiff.relative_to(input_dir)
+        mask = output_dir / relative_ome_tiff
+        mask.parent.mkdir(exist_ok=True, parents=True)
+
+        universal_2Dto3D(ome_tiff, mask)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Universal 2D to 3D segmentation")
-    parser.add_argument("img_file", type=Path)
-    parser.add_argument("mask_output_dir", type=Path, nargs="?", default=Path())
+    parser.add_argument("input_dir", type=Path)
+    parser.add_argument("output_dir", type=Path, nargs="?", default=Path())
     args = parser.parse_args()
-    four_channel_3D_mask = universal_2Dto3D(args.img_file, args.mask_output_dir)
+    four_channel_3D_mask = universal_2Dto3D(args.input_dir, args.mask_output_dir)
