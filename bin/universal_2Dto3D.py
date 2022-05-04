@@ -63,4 +63,4 @@ if __name__ == "__main__":
     parser.add_argument("input_dir", type=Path)
     parser.add_argument("output_dir", type=Path, nargs="?", default=Path())
     args = parser.parse_args()
-    four_channel_3D_mask = universal_2Dto3D(args.input_dir, args.mask_output_dir)
+    four_channel_3D_mask = main(args.input_dir, args.mask_output_dir)
