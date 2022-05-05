@@ -1,1 +1,2 @@
-hubmap/imc_3d_segmentation	docker/Dockerfile	base_directory_build,write_git_json=bin/git-revision.json
+hubmap/imc_3d_segmentation	docker/segmentation/Dockerfile	base_directory_build,write_git_json=bin/git-revision.json
+hubmap/3d_mask_convert	docker/3d_mask_convert/Dockerfile	base_directory_build
