@@ -1,3 +1,4 @@
+*.ome.tiff
 .idea/
 __pycache__/
 bin/git-revision.json
