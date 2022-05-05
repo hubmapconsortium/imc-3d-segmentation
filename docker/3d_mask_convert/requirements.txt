@@ -1,0 +1,3 @@
+aicsimageio
+numpy
+scikit-image
