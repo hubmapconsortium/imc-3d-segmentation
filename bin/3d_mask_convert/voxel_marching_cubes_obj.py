@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from itertools import repeat
 from multiprocessing import Pool
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Tuple
 
 import aicsimageio
 import numpy as np
@@ -22,7 +22,7 @@ def find_ome_tiffs(directory: Path) -> Iterable[Path]:
             yield path
 
 
-def cubes(data: tuple[np.ndarray, int]):
+def cubes(data: Tuple[np.ndarray, int]):
     mask_data, cell = data
     coords, faces, *_ = marching_cubes(mask_data == cell)
     return coords, faces, cell
