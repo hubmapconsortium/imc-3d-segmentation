@@ -11,7 +11,7 @@ inputs:
 outputs:
   mask_image_dir:
     outputSource: segmentation/mask_image_dir
-    type: File[]
+    type: Directory
     label: "3D segmentation masks, same structure as input dir"
 
 steps:

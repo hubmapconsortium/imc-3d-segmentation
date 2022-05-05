@@ -61,6 +61,7 @@ def main(input_dir: Path, output_dir: Path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Universal 2D to 3D segmentation")
     parser.add_argument("input_dir", type=Path)
-    parser.add_argument("output_dir", type=Path, nargs="?", default=Path())
+    parser.add_argument("output_dir", type=Path, nargs="?", default=Path("mask"))
     args = parser.parse_args()
-    four_channel_3D_mask = main(args.input_dir, args.output_dir)
+
+    main(args.input_dir, args.output_dir)

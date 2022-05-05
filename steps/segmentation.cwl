@@ -14,6 +14,6 @@ inputs:
       position: 0
 outputs:
   mask_image_dir:
-    type: File[]
+    type: Directory
     outputBinding:
-      glob: "**/*.ome.tiff"
+      glob: "mask"
