@@ -20,4 +20,4 @@ outputs:
   obj_dir:
     type: Directory
     outputBinding:
-      glob: "mask"
+      glob: "mesh"
