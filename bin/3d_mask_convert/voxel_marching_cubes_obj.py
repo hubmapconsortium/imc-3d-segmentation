@@ -4,14 +4,13 @@ from argparse import ArgumentParser
 from itertools import repeat
 from multiprocessing import Pool
 from pathlib import Path
-from typing import List, Tuple
+from typing import Tuple
 
 import aicsimageio
-import lxml.etree
 import numpy as np
 from skimage.measure import marching_cubes
 
-from utils import find_ome_tiffs
+from utils import find_ome_tiffs, get_channel_names
 
 dims_to_drop = frozenset("ST")
 
@@ -22,22 +21,13 @@ def cubes(data: Tuple[np.ndarray, int]):
     return coords, faces, cell
 
 
-def get_channel_names(metadata_xml: str) -> List[str]:
-    tree = lxml.etree.fromstring(metadata_xml)
-    namespaces = tree.nsmap.copy()
-    namespaces["OME"] = namespaces[None]
-    del namespaces[None]
-    channels = tree.xpath("//OME:Pixels/OME:Channel/@Name", namespaces=namespaces)
-    return channels
-
-
 def convert(mask_file: Path, output_dir: Path, processes: int):
     image = aicsimageio.AICSImage(mask_file)
-    channels = get_channel_names(image.metadata)
+    channel_names = get_channel_names(image.metadata)
     squeeze_sel = tuple(i for i, dim in enumerate(image.dims) if dim in dims_to_drop)
     mask_data = np.squeeze(image.data, squeeze_sel).astype(int)
 
-    for channel, mask in zip(channels, mask_data):
+    for channel, mask in zip(channel_names, mask_data):
         logging.info("Converting channel", channel)
         cells = set(mask.flat) - {0}
         output_file = output_dir / f"{channel}.obj"
