@@ -66,7 +66,7 @@ def main(input_dir: Path, output_dir_base: Path, processes: int):
 if __name__ == "__main__":
     p = ArgumentParser()
     p.add_argument("input_directory", type=Path)
-    p.add_argument("output_dir", type=Path, nargs="?", default=Path("mask"))
+    p.add_argument("output_dir", type=Path, nargs="?", default=Path("mesh"))
     p.add_argument("-p", "--processes", type=int, default=1)
     args = p.parse_args()
 
