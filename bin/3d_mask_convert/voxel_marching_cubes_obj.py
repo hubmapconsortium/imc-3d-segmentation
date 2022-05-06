@@ -10,16 +10,7 @@ import aicsimageio
 import numpy as np
 from skimage.measure import marching_cubes
 
-# TODO: deduplicate
-
-# no path glob or fnmatch because we need the last 'f' to be optional
-OME_TIFF_PATTERN = re.compile(r".*\.ome\.tiff?")
-
-
-def find_ome_tiffs(directory: Path) -> Iterable[Path]:
-    for path in directory.glob("**/*"):
-        if path.is_file() and OME_TIFF_PATTERN.match(path.name):
-            yield path
+from utils import find_ome_tiffs
 
 
 def cubes(data: Tuple[np.ndarray, int]):
