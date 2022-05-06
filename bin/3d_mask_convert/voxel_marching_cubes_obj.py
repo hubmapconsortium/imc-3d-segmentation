@@ -28,7 +28,7 @@ def convert(mask_file: Path, output_dir: Path, processes: int):
     mask_data = np.squeeze(image.data, squeeze_sel).astype(int)
 
     for channel, mask in zip(channel_names, mask_data):
-        logging.info("Converting channel %s", channel)
+        logging.info("Converting channel '%s', mask shape %s", channel, mask.shape)
         cells = set(mask.flat) - {0}
         output_file = output_dir / f"{channel}.obj"
         with open(output_file, "w") as f:
@@ -45,7 +45,6 @@ def convert(mask_file: Path, output_dir: Path, processes: int):
                     chunksize=256,
                 ):
                     print(f"g {channel}_{mask_id}", file=f)
-                    coords, faces, *_ = marching_cubes(mask_data == mask_id)
                     for vertex in coords:
                         print("v " + " ".join(str(x) for x in vertex), file=f)
                     for face in faces:
