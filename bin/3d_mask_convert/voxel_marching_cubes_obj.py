@@ -28,7 +28,7 @@ def convert(mask_file: Path, output_dir: Path, processes: int):
     mask_data = np.squeeze(image.data, squeeze_sel).astype(int)
 
     for channel, mask in zip(channel_names, mask_data):
-        logging.info("Converting channel", channel)
+        logging.info("Converting channel %s", channel)
         cells = set(mask.flat) - {0}
         output_file = output_dir / f"{channel}.obj"
         with open(output_file, "w") as f:
