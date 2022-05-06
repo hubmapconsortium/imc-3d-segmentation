@@ -32,6 +32,7 @@ def convert(mask_file: Path, output_dir: Path, processes: int):
     for channel, mask in zip(channel_names, mask_data):
         logging.info("Converting channel '%s', mask shape %s", channel, mask.shape)
         cells = set(mask.flat) - {0}
+        logging.info("Cell count: %d", len(cells))
         output_file = output_dir / f"{channel}.obj"
         with open(output_file, "w") as f:
             print("o Segmentation_Mask", file=f)
