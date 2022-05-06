@@ -41,7 +41,7 @@ def convert(mask_file: Path, output_dir: Path, processes: int):
             with Pool(processes=processes) as pool:
                 for coords, faces, mask_id in pool.imap(
                     cubes,
-                    zip(repeat(mask_data), cells),
+                    zip(repeat(mask), cells),
                     chunksize=256,
                 ):
                     print(f"g {channel}_{mask_id}", file=f)
