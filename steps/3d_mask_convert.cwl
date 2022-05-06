@@ -11,6 +11,11 @@ inputs:
     type: Directory
     inputBinding:
       position: 0
+  processes:
+    type: int
+    inputBinding:
+      position: 10
+      prefix: "--processes"
 outputs:
   obj_dir:
     type: Directory
