@@ -14,12 +14,6 @@ from skimage.io import imsave
 from skimage.segmentation import find_boundaries
 
 
-def get_compartments_diff(arr1, arr2):
-    a = set((tuple(i) for i in arr1))
-    b = set((tuple(i) for i in arr2))
-    diff = np.array(list(a - b))
-    return diff
-
 
 def get_matched_cells(cell_arr, cell_membrane_arr, nuclear_arr, mismatch_repair):
     a = set((tuple(i) for i in cell_arr))
@@ -58,14 +52,6 @@ def unravel_indices(labeled_mask, maxvalue):
     return masked_imgs_coord
 
 
-def get_coordinates(mask):
-    print("Getting cell coordinates...")
-    cell_num = np.unique(mask)
-    maxvalue = len(cell_num)
-    channel_coords = unravel_indices(mask, maxvalue)
-    return channel_coords
-
-
 def compute_M(data):
     cols = np.arange(data.size)
     return csr_matrix((cols, (data.ravel(), cols)), shape=(data.max() + 1, data.size))
@@ -74,12 +60,6 @@ def compute_M(data):
 def get_indices_sparse(data):
     M = compute_M(data)
     return [np.unravel_index(row.data, data.shape) for row in M]
-
-
-def show_plt(mask):
-    plt.imshow(mask)
-    plt.show()
-    plt.clf()
 
 
 def list_remove(c_list, indexes):
@@ -116,15 +96,6 @@ def get_mask(cell_list, mask_shape):
     for cell_num in range(len(cell_list)):
         mask[tuple(cell_list[cell_num].T)] = cell_num
     return mask
-
-
-def get_new_slice_mask(current_matched_index, new_matched, new_unmatched, max_cell_num):
-    mask = np.zeros((img_current_slice.shape))
-    for cell_num in range(len(new_matched)):
-        mask[tuple(new_matched[cell_num].T)] = current_matched_index[cell_num] + 1
-    for cell_num in range(len(new_unmatched)):
-        mask[tuple(new_unmatched[cell_num].T)] = max_cell_num + cell_num + 1
-    return mask.astype(int)
 
 
 def get_unmatched_list(matched_list, total_num):
