@@ -250,7 +250,6 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_file: Path):
     mask_binary = np.zeros(new_mask.shape, dtype=int)
     for index in new_coords.index[1:]:
         if len(new_coords[index][0]) < 100:
-
             Z = index // (X_max * Y_max)
             new_coords_index = new_coords[index]
             mask_binary[new_coords_index] = 1
@@ -281,7 +280,6 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_file: Path):
             mask_binary[new_coords[index]] = 0
             # remove small bits
             if len(boundary_3D_cell_indices_matched) > 0:
-
                 value, count = Counter(boundary_3D_cell_indices_matched).most_common()[0]
                 if len(new_coords[value][0]) < 100:
                     new_mask[new_coords[index]] = 0
@@ -323,8 +321,11 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_file: Path):
     new_coords_no_bits_imputed = get_indices_pandas(new_mask_imput)
 
     new_mask_imputed = np.zeros(new_mask.shape)
+    cell_idx = 1
     for index in new_coords_no_bits_imputed.index[1:]:
-        new_mask_imputed[new_coords_no_bits_imputed[index]] = index
+        if len(np.unique(new_coords_no_bits_imputed[index][0])) >= 3:
+            new_mask_imputed[new_coords_no_bits_imputed[index]] = cell_idx
+            cell_idx += 1
 
     # construct 4-channel masks
     nuclear_slice = np.load(join(data_dir, "nuclear_mask_XY.npy"))
