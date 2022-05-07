@@ -15,7 +15,7 @@ saved_model_path = Path("/opt/.keras/models/MultiplexSegmentation")
 
 def main(data_dir: Path, axis: str):
     im1 = imread(fspath(data_dir / "nucleus.tif"))
-    im2 = imread(fspath(data_dir / "membrane.tif"))
+    im2 = imread(fspath(data_dir / "cytoplasm.tif"))
     z_slice_num = im1.shape[0]
 
     if axis == "XY":
