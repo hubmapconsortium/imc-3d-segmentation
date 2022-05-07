@@ -184,7 +184,6 @@ def match_repair_cell_nucleus(nuclear_slice, cell_slice):
             best_mismatch_fraction = 1
             whole_cell_best = []
             for j in nuclear_search_num:
-                # print(j)
                 if j != 0:
                     if (j - 1 not in nucleus_matched_index_list) and (
                         i not in cell_matched_index_list
@@ -292,8 +291,8 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_file: Path):
 
     XY_coords = get_indices_sparse(mask_XY.astype(int))
 
-    # impute final mask according matched cells from XY axis
-    new_mask_imput = new_mask.copy()
+    # repair final pixel-wise mask according matched cells from XY axis
+    new_mask_imputed = new_mask.copy()
     for index in new_coords_no_bits.index[1:]:
         new_coords_no_bits_index = new_coords_no_bits[index]
         Z = int(index // (X_max * Y_max))
@@ -317,19 +316,20 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_file: Path):
         XY_coords_Z[1] = XY_coords_Z[1][impute_range]
         XY_coords_Z[2] = XY_coords_Z[2][impute_range]
         XY_coords_Z = tuple(XY_coords_Z)
-        new_mask_imput[XY_coords_Z] = index
-    new_coords_no_bits_imputed = get_indices_pandas(new_mask_imput)
+        new_mask_imputed[XY_coords_Z] = index
+    new_coords_no_bits_imputed = get_indices_pandas(new_mask_imputed)
 
-    new_mask_imputed = np.zeros(new_mask.shape)
+    # remove 3D cells have < 3 z-slices (biologically not sound)
+    new_mask_imputed_filtered = np.zeros(new_mask.shape)
     cell_idx = 1
     for index in new_coords_no_bits_imputed.index[1:]:
         if len(np.unique(new_coords_no_bits_imputed[index][0])) >= 3:
-            new_mask_imputed[new_coords_no_bits_imputed[index]] = cell_idx
+            new_mask_imputed_filtered[new_coords_no_bits_imputed[index]] = cell_idx
             cell_idx += 1
 
     # construct 4-channel masks
     nuclear_slice = np.load(join(data_dir, "nuclear_mask_XY.npy"))
-    cell_mask_3D = new_mask_imputed
+    cell_mask_3D = new_mask_imputed_filtered
 
     repaired_nuclear_slices = []
     matched_cell_slices = []
