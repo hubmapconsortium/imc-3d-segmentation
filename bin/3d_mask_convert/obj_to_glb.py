@@ -1,8 +1,7 @@
 #!/usr/bin/env -S blender -b -P
-from argparse import ArgumentParser
+import sys
 from os import fspath
 from pathlib import Path
-from typing import Iterable
 
 import bmesh
 import bpy
@@ -31,7 +30,7 @@ def convert(obj_file: Path, glb_file: Path):
 
     bm.free()
 
-    bpy.ops.export_scene.glb(filepath=fspath(glb_file))
+    bpy.ops.export_scene.gltf(filepath=fspath(glb_file))
 
 
 def main(directory: Path):
@@ -42,8 +41,9 @@ def main(directory: Path):
 
 
 if __name__ == "__main__":
-    p = ArgumentParser()
-    p.add_argument("directory", type=Path)
-    args = p.parse_args()
-
-    main(args.directory)
+    # TODO: maybe try to use argparse again; Blender's runtime
+    #   complicates that quite a bit
+    # sys.argv[:4] = ['blender', '-b', '-P', __file__]
+    if len(sys.argv) != 5:
+        raise ValueError("Need exactly one argument: directory containing OBJ files")
+    main(Path(sys.argv[4]))
