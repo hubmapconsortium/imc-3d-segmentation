@@ -7,6 +7,10 @@ inputs:
   input_dir:
     label: "Directory containing 3D OME-TIFF images"
     type: Directory
+  processes:
+    label: "Number of subprocesses"
+    type: int
+    default: 1
 
 outputs:
   mask_image_dir:
@@ -28,15 +32,18 @@ steps:
     label: "3D IMC segmentation"
   3d_mask_convert:
     in:
-      mask_image_dir:
+      input_dir:
         source:
           segmentation/mask_image_dir
+      processes:
+        source:
+          processes
     out: [obj_mesh_dir]
     run: steps/3d_mask_convert.cwl
     label: "OME-TIFF -> OBJ conversion"
   obj_to_glb:
     in:
-      obj_mesh_dir:
+      input_dir:
         source:
           3d_mask_convert/obj_mesh_dir
     out: [glb_mesh_dir]

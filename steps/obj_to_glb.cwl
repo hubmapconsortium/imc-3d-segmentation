@@ -12,7 +12,7 @@ inputs:
     inputBinding:
       position: 0
 outputs:
-  glb_dir:
+  glb_mesh_dir:
     type: Directory
     outputBinding:
       glob: "mesh"

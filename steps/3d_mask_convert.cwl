@@ -17,7 +17,7 @@ inputs:
       position: 10
       prefix: "--processes"
 outputs:
-  obj_dir:
+  obj_mesh_dir:
     type: Directory
     outputBinding:
       glob: "mesh"
