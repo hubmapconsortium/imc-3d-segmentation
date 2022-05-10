@@ -1,5 +1,6 @@
 #!/usr/bin/env -S blender -b -P
 import sys
+from math import radians
 from os import fspath
 from pathlib import Path
 
@@ -22,7 +23,12 @@ def convert(obj_file: Path, glb_file: Path):
 
     for m in meshes:
         bm.from_mesh(m)
-        bmesh.ops.dissolve_limit(bm, verts=bm.verts, edges=bm.edges)
+        bmesh.ops.dissolve_limit(
+            bm,
+            angle_limit=radians(5),
+            verts=bm.verts,
+            edges=bm.edges,
+        )
         bm.to_mesh(m)
         m.update()
         bm.clear()
