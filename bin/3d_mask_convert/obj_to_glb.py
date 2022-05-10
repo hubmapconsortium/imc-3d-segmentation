@@ -21,6 +21,7 @@ def convert(obj_file: Path, glb_file: Path):
 
     bm = bmesh.new()
 
+    print('Performing limited dissolve cleanup on', len(meshes), 'meshes')
     for m in meshes:
         bm.from_mesh(m)
         bmesh.ops.dissolve_limit(
@@ -36,10 +37,12 @@ def convert(obj_file: Path, glb_file: Path):
     bm.free()
 
     objs_to_assign = list(bpy.data.objects)
+    print('Assigning', len(objs_to_assign), 'objects to parent')
     mask_parent = bpy.data.objects.new("Segmentation_Mask", None)
     for obj in objs_to_assign:
         obj.parent = mask_parent
 
+    print('Linking parent object to scene')
     bpy.context.scene.collection.objects.link(mask_parent)
     bpy.ops.export_scene.gltf(filepath=fspath(glb_file))
 
@@ -49,6 +52,7 @@ def main(directory: Path, base_dir: Path = Path("mesh")):
         glb_file = base_dir / obj_file.relative_to(directory).with_suffix(".glb")
         glb_file.parent.mkdir(exist_ok=True, parents=True)
         convert(obj_file, glb_file)
+    sys.exit(0)
 
 
 if __name__ == "__main__":
