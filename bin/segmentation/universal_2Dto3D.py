@@ -1,23 +1,13 @@
 #!/usr/bin/env python3
 import argparse
-import re
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Iterable
 
 from input_channels_3D import IMC_3D_input_channels
 from match_2D_stacks import match_stacks
 from match_3D_cells import match_3D_cells
 from segmentation_2D_slices import segmentation
-
-# no path glob or fnmatch because we need the last 'f' to be optional
-OME_TIFF_PATTERN = re.compile(r".*\.ome\.tiff?")
-
-
-def find_ome_tiffs(directory: Path) -> Iterable[Path]:
-    for path in directory.glob("**/*"):
-        if path.is_file() and OME_TIFF_PATTERN.match(path.name):
-            yield path
+from utils import find_ome_tiffs
 
 
 def universal_2Dto3D(img_file: Path, output_file: Path):

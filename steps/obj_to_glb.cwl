@@ -1,23 +1,18 @@
 cwlVersion: v1.1
 class: CommandLineTool
-label: Convert 3D segmentation mask from OME-TIFF to OBJ
+label: Convert OBJ formats to GLB after geometry cleanups
 requirements:
   DockerRequirement:
       dockerPull: hubmap/3d_mask_convert:latest
-baseCommand: "/opt/voxel_marching_cubes_obj.py"
+baseCommand: "/opt/obj_to_glb.py"
 
 inputs:
   input_dir:
     type: Directory
     inputBinding:
       position: 0
-  processes:
-    type: int
-    inputBinding:
-      position: 10
-      prefix: "--processes"
 outputs:
-  obj_dir:
+  glb_dir:
     type: Directory
     outputBinding:
       glob: "mesh"
