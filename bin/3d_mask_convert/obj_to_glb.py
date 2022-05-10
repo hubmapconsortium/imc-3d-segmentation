@@ -1,4 +1,4 @@
-#!/usr/bin/env blender -b -P
+#!/usr/bin/env -S blender -b -P
 from argparse import ArgumentParser
 from os import fspath
 from pathlib import Path
