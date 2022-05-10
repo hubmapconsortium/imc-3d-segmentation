@@ -16,7 +16,6 @@ def convert(obj_file: Path, glb_file: Path):
         filepath=fspath(obj_file),
         use_split_groups=True,
     )
-
     meshes = {o.data for o in bpy.context.selected_objects if o.type == "MESH"}
 
     bm = bmesh.new()
@@ -29,6 +28,11 @@ def convert(obj_file: Path, glb_file: Path):
         bm.clear()
 
     bm.free()
+
+    objs_to_assign = list(bpy.data.objects)
+    mask_parent = bpy.data.objects.new("Segmentation_Mask", None)
+    for obj in objs_to_assign:
+        obj.parent = mask_parent
 
     bpy.ops.export_scene.gltf(filepath=fspath(glb_file))
 
