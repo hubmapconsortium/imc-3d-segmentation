@@ -49,7 +49,7 @@ def convert(obj_file: Path, glb_file: Path):
     bpy.ops.export_scene.gltf(filepath=fspath(glb_file))
 
 
-def main(directory: Path, base_dir: Path = Path("mesh")):
+def main(directory: Path, base_dir: Path = Path()):
     for obj_file in directory.glob("**/*.obj"):
         glb_file = base_dir / obj_file.relative_to(directory).with_suffix(".glb")
         glb_file.parent.mkdir(exist_ok=True, parents=True)
