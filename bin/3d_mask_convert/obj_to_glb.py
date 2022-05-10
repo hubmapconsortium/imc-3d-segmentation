@@ -34,7 +34,7 @@ def convert(obj_file: Path, glb_file: Path):
     for obj in objs_to_assign:
         obj.parent = mask_parent
 
-    bpy.ops.object.select_all(action="SELECT")
+    bpy.context.scene.collection.objects.link(mask_parent)
     bpy.ops.export_scene.gltf(filepath=fspath(glb_file))
 
 
