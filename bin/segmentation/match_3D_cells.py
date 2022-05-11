@@ -14,7 +14,6 @@ from skimage.io import imsave
 from skimage.segmentation import find_boundaries
 
 
-
 def get_matched_cells(cell_arr, cell_membrane_arr, nuclear_arr, mismatch_repair):
     a = set((tuple(i) for i in cell_arr))
     b = set((tuple(i) for i in cell_membrane_arr))
