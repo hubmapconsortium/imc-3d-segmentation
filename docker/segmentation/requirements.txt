@@ -1,2 +1,2 @@
 # Not exhaustive, since this is built on the hubmap/segmentations Docker image
-aicsimageio
+aicsimageio[bfio]~=4.7
