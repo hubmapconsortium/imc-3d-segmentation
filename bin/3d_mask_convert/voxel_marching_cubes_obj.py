@@ -26,7 +26,7 @@ def convert(mask_file: Path, output_dir: Path, processes: int):
     logging.info("Mask dimensions: %s", image.shape)
     channel_names = image.channel_names
     logging.info("Mask channels: %s", channel_names)
-    squeeze_sel = tuple(i for i, dim in enumerate(image.dims) if dim in dims_to_drop)
+    squeeze_sel = tuple(i for i, dim in enumerate(image.dims.order) if dim in dims_to_drop)
     mask_data = np.squeeze(image.data, squeeze_sel).astype(int)
 
     for channel, mask in zip(channel_names, mask_data):
