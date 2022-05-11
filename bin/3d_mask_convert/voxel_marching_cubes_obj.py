@@ -10,7 +10,7 @@ import aicsimageio
 import numpy as np
 from skimage.measure import marching_cubes
 
-from utils import find_ome_tiffs, get_channel_names
+from utils import find_ome_tiffs
 
 dims_to_drop = frozenset("ST")
 
@@ -24,7 +24,7 @@ def cubes(data: Tuple[np.ndarray, int]):
 def convert(mask_file: Path, output_dir: Path, processes: int):
     image = aicsimageio.AICSImage(mask_file)
     logging.info("Mask dimensions: %s", image.shape)
-    channel_names = get_channel_names(image)
+    channel_names = image.channel_names
     logging.info("Mask channels: %s", channel_names)
     squeeze_sel = tuple(i for i, dim in enumerate(image.dims) if dim in dims_to_drop)
     mask_data = np.squeeze(image.data, squeeze_sel).astype(int)
