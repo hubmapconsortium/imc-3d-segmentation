@@ -23,6 +23,13 @@ outputs:
     label: "GLB directory"
 
 steps:
+  copy_expr_images:
+    in:
+      input_dir:
+        source: input_dir
+    out: [expr_image_dir]
+    run: steps/copy_expr_images.cwl
+    label: "Copy expression images to output directory"
   segmentation:
     in:
       input_dir:
