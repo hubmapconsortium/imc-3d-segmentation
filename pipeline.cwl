@@ -13,6 +13,10 @@ inputs:
     default: 1
 
 outputs:
+  expr_image_dir:
+    outputSource: copy_expr_images/expr_image_dir
+    type: Directory
+    label: "Expression OME-TIFF images"
   mask_image_dir:
     outputSource: segmentation/mask_image_dir
     type: Directory
