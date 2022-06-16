@@ -1,0 +1,17 @@
+[
+	{
+		"pattern": "expr/.*\\.ome\\.tiff",
+		"description": "Expression OME-TIFF",
+		"edam_ontology_term": "EDAM_1.24.format_3727"
+	},
+	{
+		"pattern": "mask/.*\\.ome\\.tiff",
+		"description": "Segmentation mask OME-TIFF",
+		"edam_ontology_term": "EDAM_1.24.format_3727"
+	},
+	{
+		"pattern": "mesh/.*\\.glb",
+		"description": "3D mesh",
+		"edam_ontology_term": "EDAM_1.24.format_2333"
+	}
+]
