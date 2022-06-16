@@ -1,0 +1,14 @@
+{
+    "nucleus": {
+        "name": "Ir191",
+        "comment": "Iridium"
+    },
+    "cytoplasm": {
+        "name": "In115",
+        "comment": "SMA"
+    },
+    "membrane": {
+        "name": "La139",
+        "comment": "E-Cad/P-Cad"
+    }
+}
