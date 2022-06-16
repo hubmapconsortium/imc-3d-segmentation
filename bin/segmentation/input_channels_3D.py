@@ -1,7 +1,10 @@
 from os import fspath
+from pathlib import Path
 
 from aicsimageio import AICSImage
 from skimage.io import imread
+
+channel_preset_path = Path("/data/channel-presets")
 
 
 def IMC_3D_input_channels(img_dir):

@@ -6,5 +6,6 @@ RUN pip3 install -r /opt/requirements.txt \
 
 COPY bin/common /opt
 COPY bin/segmentation /opt
+COPY data /data
 
 WORKDIR /opt
