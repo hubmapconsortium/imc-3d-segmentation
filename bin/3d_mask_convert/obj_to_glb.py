@@ -54,6 +54,7 @@ def main(directory: Path, base_dir: Path = Path("mesh")):
         glb_file = base_dir / obj_file.relative_to(directory).with_suffix(".glb")
         glb_file.parent.mkdir(exist_ok=True, parents=True)
         convert(obj_file, glb_file)
+    # apparently necessary due to Blender's runtime:
     sys.exit(0)
 
 
