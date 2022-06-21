@@ -330,7 +330,7 @@ def match_3D_cells(mask_XY, mask_XZ, mask_YZ, data_dir, output_file: Path):
         )
     )
 
-    channel_names = ["cells", "nuclei", "cell_boundaries", "nucleus_boundaries"]
+    channel_names = ["cell", "nucleus", "cell_boundary", "nucleus_boundary"]
     OmeTiffWriter.save(image, fspath(output_file), channel_names=channel_names)
 
     return image
