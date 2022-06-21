@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Tuple
 
 import aicsimageio
+import manhole
 import numpy as np
 from skimage.measure import marching_cubes
 
@@ -66,6 +67,8 @@ def main(input_dir: Path, output_dir_base: Path, processes: int):
 
 
 if __name__ == "__main__":
+    manhole.install(activate_on="USR1")
+
     p = ArgumentParser()
     p.add_argument("input_directory", type=Path)
     p.add_argument("output_dir", type=Path, nargs="?", default=Path("mesh"))

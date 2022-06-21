@@ -7,6 +7,7 @@ from pathlib import Path
 
 import bmesh
 import bpy
+import manhole
 
 
 def convert(obj_file: Path, glb_file: Path):
@@ -64,6 +65,7 @@ if __name__ == "__main__":
         style="{",
         level=logging.INFO,
     )
+    manhole.install(activate_on="USR1")
 
     # TODO: maybe try to use argparse again; Blender's runtime
     #   complicates that quite a bit

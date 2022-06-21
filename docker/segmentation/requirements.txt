@@ -1,2 +1,3 @@
 # Not exhaustive, since this is built on the hubmap/segmentations Docker image
 aicsimageio[bfio]~=4.7
+manhole

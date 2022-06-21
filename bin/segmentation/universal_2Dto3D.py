@@ -3,6 +3,8 @@ import argparse
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import manhole
+
 from input_channels_3D import IMC_3D_input_channels
 from match_2D_stacks import match_stacks
 from match_3D_cells import match_3D_cells
@@ -49,6 +51,8 @@ def main(input_dir: Path, output_dir: Path):
 
 
 if __name__ == "__main__":
+    manhole.install(activate_on="USR1")
+
     parser = argparse.ArgumentParser(description="Universal 2D to 3D segmentation")
     parser.add_argument("input_dir", type=Path)
     parser.add_argument("output_dir", type=Path, nargs="?", default=Path("mask"))
