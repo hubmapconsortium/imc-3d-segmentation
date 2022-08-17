@@ -3,7 +3,7 @@ class: CommandLineTool
 label: 3D segmentation for IMC
 requirements:
   DockerRequirement:
-      dockerPull: hubmap/imc_3d_segmentation:latest
+      dockerPull: hubmap/imc_3d_segmentation:1.0
   DockerGpuRequirement: {}
 baseCommand: "/opt/universal_2Dto3D.py"
 
