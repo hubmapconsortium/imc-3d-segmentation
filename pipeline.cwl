@@ -31,6 +31,8 @@ steps:
     in:
       data_dir:
         source: input_dir
+      output_path_prefix:
+        valueFrom: "expr"
     out: [output_dir]
     run: ome-tiff-normalize/ome_tiff_normalize.cwl
     label: "Write normalized OME-TIFF expression images"
