@@ -3,6 +3,9 @@ class: Workflow
 cwlVersion: v1.1
 label: 3D segmentation for IMC datasets
 
+requirements:
+  StepInputExpressionRequirement: {}
+
 inputs:
   input_dir:
     label: "Directory containing 3D OME-TIFF images"
