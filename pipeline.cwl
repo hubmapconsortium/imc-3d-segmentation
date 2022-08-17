@@ -14,8 +14,8 @@ inputs:
 
 outputs:
   expr_image_dir:
-    outputSource: copy_expr_images/expr_image_dir
-    type: Directory
+    outputSource:   normalize_expr_images/output_dir
+    type: Directory[]
     label: "Expression OME-TIFF images"
   mask_image_dir:
     outputSource: segmentation/mask_image_dir
@@ -27,13 +27,13 @@ outputs:
     label: "GLB directory"
 
 steps:
-  copy_expr_images:
+  normalize_expr_images:
     in:
-      input_dir:
+      data_dir:
         source: input_dir
-    out: [expr_image_dir]
-    run: steps/copy_expr_images.cwl
-    label: "Copy expression images to output directory"
+    out: [output_dir]
+    run: ome-tiff-normalize/ome_tiff_normalize.cwl
+    label: "Write normalized OME-TIFF expression images"
   segmentation:
     in:
       input_dir:
