@@ -17,7 +17,7 @@ inputs:
 
 outputs:
   expr_image_dir:
-    outputSource:   normalize_expr_images/output_dir
+    outputSource: normalize_expr_images/output_dir
     type: Directory[]
     label: "Expression OME-TIFF images"
   mask_image_dir:
@@ -43,20 +43,18 @@ steps:
     in:
       input_dir:
         source: input_dir
-    out: [mask_image_dir]
+    out: [results_dir]
     run: steps/segmentation.cwl
     label: "3D IMC segmentation"
-  3d_mask_convert:
+  convert_to_ometiff:
     in:
       input_dir:
-        source:
-          segmentation/mask_image_dir
-      processes:
-        source:
-          processes
-    out: [obj_mesh_dir]
-    run: steps/3d_mask_convert.cwl
-    label: "OME-TIFF -> OBJ conversion"
+        source: segmentation/input_dir
+      segmentation_results_dir:
+        source: segmentation/results_dir
+    out: [mask]
+    run: steps/convert_to_ometiff.cwl
+    label: "Segmentation mask consolidation to OME-TIFF"
   obj_to_glb:
     in:
       input_dir:

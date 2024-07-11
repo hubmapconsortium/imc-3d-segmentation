@@ -27,7 +27,7 @@ inputs:
     inputBinding:
       position: 3
 outputs:
-  mask_image_dir:
+  results_dir:
     type: Directory
     outputBinding:
       glob: "results"

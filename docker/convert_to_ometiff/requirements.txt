@@ -1,0 +1,6 @@
+aicsimageio[bfio]
+manhole
+numpy<2
+tifffile
+
+git+https://github.com/hubmapconsortium/ome-utils@v0.3.1
