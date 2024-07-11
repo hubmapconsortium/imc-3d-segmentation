@@ -1,3 +1,5 @@
 # Not exhaustive, since this is built on the hubmap/segmentations Docker image
-aicsimageio[bfio]~=4.7
+aicsimageio[bfio]
+deepcell==0.12.9
+numpy<1.21,>=1.17
 manhole
