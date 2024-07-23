@@ -12,7 +12,14 @@ RUN cd /opt/CellSegmentationEvaluator/pip_package \
 
 COPY 3DCellComposer /opt
 
+WORKDIR /opt
+
+RUN wget https://hubmap-pipeline-assets.s3.amazonaws.com/deepcell-models/MultiplexSegmentation-9.tar.gz \
+ && mkdir -p /opt/.keras/models/0_12_9 \
+ && cd /opt/.keras/models/0_12_9 \
+ && tar -xf /opt/MultiplexSegmentation-9.tar.gz \
+ && rm /opt/MultiplexSegmentation-9.tar.gz
+
 COPY bin/common /opt
 COPY data /data
 
-WORKDIR /opt
