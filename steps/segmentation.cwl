@@ -10,8 +10,8 @@ requirements:
 baseCommand: ["python", "/opt/run_3DCellComposer.py"]
 
 inputs:
-  image:
-    type: File
+  input_dir:
+    type: Directory
     inputBinding:
       position: 0
   nucleus_markers:
