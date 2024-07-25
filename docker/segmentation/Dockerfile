@@ -1,5 +1,12 @@
 FROM hubmap/segmentations:1.2.4
 
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update \
+ && apt-get -y install \
+    git \
+ && rm -rf /var/cache/apt/*
+
 COPY docker/segmentation/requirements.txt /opt
 RUN pip3 install -r /opt/requirements.txt \
  && rm -rf /root/.cache/pip /opt/requirements.txt
@@ -22,4 +29,3 @@ RUN wget https://hubmap-pipeline-assets.s3.amazonaws.com/deepcell-models/Multipl
 
 COPY bin/common /opt
 COPY data /data
-
