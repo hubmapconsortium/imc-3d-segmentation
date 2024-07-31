@@ -1,9 +1,6 @@
-[submodule "ome-tiff-normalize"]
-	path = ome-tiff-normalize
-	url = https://github.com/hubmapconsortium/ome-tiff-normalize
 [submodule "3DCellComposer"]
 	path = 3DCellComposer
-	url = https://github.com/murphygroup/3DCellComposer
+	url = https://github.com/hubmapconsortium/3DCellComposer
 [submodule "CellSegmentationEvaluator"]
 	path = CellSegmentationEvaluator
-	url = https://github.com/murphygroup/CellSegmentationEvaluator
+	url = https://github.com/hubmapconsortium/CellSegmentationEvaluator
