@@ -1,4 +1,4 @@
-FROM hubmap/segmentations:1.2.4
+FROM hubmap/segmentations:1.3.1
 
 ENV DEBIAN_FRONTEND noninteractive
 
