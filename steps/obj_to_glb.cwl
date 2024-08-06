@@ -15,4 +15,4 @@ outputs:
   glb_mesh_dir:
     type: Directory
     outputBinding:
-      glob: "mesh"
+      glob: "pipeline_output"

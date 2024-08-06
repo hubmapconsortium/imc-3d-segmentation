@@ -25,12 +25,16 @@ outputs:
     label: "Segmentation results directory"
   segmentation_mask:
     outputSource: convert_to_ometiff/mask
-    type: File
+    type: Directory
     label: "3D segmentation masks, same structure as input dir"
   glb_mesh_dir:
     outputSource: obj_to_glb/glb_mesh_dir
     type: Directory
     label: "GLB directory"
+  expr_image:
+    outputSource: copy_expr_image/image_dir
+    type: Directory
+    label: "Expression image used as input"
 
 steps:
   segmentation:
@@ -55,6 +59,13 @@ steps:
     out: [mask]
     run: steps/convert_to_ometiff.cwl
     label: "Segmentation mask consolidation to OME-TIFF"
+  copy_expr_image:
+    in:
+      input_dir:
+        source: input_dir
+    out: [image_dir]
+    run: steps/copy_expr_image.cwl
+    label: "Copy expression image to output dir"
   obj_to_glb:
     in:
       input_dir:
