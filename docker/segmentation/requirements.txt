@@ -1,3 +1,6 @@
 # Not exhaustive, since this is built on the hubmap/segmentations Docker image
-aicsimageio[bfio]~=4.7
+aicsimageio[bfio]
+deepcell==0.12.9
 manhole
+
+git+https://github.com/hubmapconsortium/ome-utils@v0.3.4

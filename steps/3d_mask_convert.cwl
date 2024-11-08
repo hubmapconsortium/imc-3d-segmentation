@@ -3,7 +3,7 @@ class: CommandLineTool
 label: Convert 3D segmentation mask from OME-TIFF to OBJ
 requirements:
   DockerRequirement:
-      dockerPull: hubmap/3d_mask_convert:1.0
+      dockerPull: hubmap/3d_mask_convert:latest
 baseCommand: "/opt/voxel_marching_cubes_obj.py"
 
 inputs:

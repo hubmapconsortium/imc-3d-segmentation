@@ -1,16 +1,21 @@
 #!/usr/bin/env -S blender -b -P
+import json
 import logging
 import sys
 from math import radians
 from os import fspath
 from pathlib import Path
+from typing import Dict
 
 import bmesh
 import bpy
 import manhole
 
+# Can't import from common/utils.py due to differences running under Blender
+output_path = Path("pipeline_output/mesh")
 
-def convert(obj_file: Path, glb_file: Path):
+
+def convert(obj_file: Path, glb_file: Path, mapping: Dict[str, int]):
     logging.info("Converting %s to %s", obj_file, glb_file)
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete()
@@ -42,6 +47,7 @@ def convert(obj_file: Path, glb_file: Path):
     logging.info("Assigning %d objects to parent", len(objs_to_assign))
     mask_parent = bpy.data.objects.new("Segmentation_Mask", None)
     for obj in objs_to_assign:
+        obj.name = f"Cell_{mapping[obj.name]}"
         obj.parent = mask_parent
 
     logging.info("Linking parent object to scene")
@@ -50,11 +56,13 @@ def convert(obj_file: Path, glb_file: Path):
     bpy.ops.export_scene.gltf(filepath=fspath(glb_file))
 
 
-def main(directory: Path, base_dir: Path = Path("mesh")):
+def main(directory: Path, object_id_mapping_file: Path, base_dir: Path = output_path):
+    with open(object_id_mapping_file) as f:
+        mapping = json.load(f)
     for obj_file in directory.glob("**/*.obj"):
         glb_file = base_dir / obj_file.relative_to(directory).with_suffix(".glb")
         glb_file.parent.mkdir(exist_ok=True, parents=True)
-        convert(obj_file, glb_file)
+        convert(obj_file, glb_file, mapping)
     # apparently necessary due to Blender's runtime:
     sys.exit(0)
 
@@ -70,6 +78,8 @@ if __name__ == "__main__":
     # TODO: maybe try to use argparse again; Blender's runtime
     #   complicates that quite a bit
     # here, sys.argv[:4] = ['blender', '-b', '-P', __file__]
-    if len(sys.argv) != 5:
-        raise ValueError("Need exactly one argument: directory containing OBJ files")
-    main(Path(sys.argv[4]))
+    if len(sys.argv) != 6:
+        raise ValueError(
+            "Need exactly two arguments: directory containing OBJ files, and JSON file"
+        )
+    main(Path(sys.argv[4]), Path(sys.argv[5]))

@@ -3,17 +3,31 @@ class: CommandLineTool
 label: 3D segmentation for IMC
 requirements:
   DockerRequirement:
-      dockerPull: hubmap/imc_3d_segmentation:1.0
+      dockerPull: hubmap/imc_3d_segmentation:latest
   DockerGpuRequirement: {}
-baseCommand: "/opt/universal_2Dto3D.py"
+  NetworkAccess:
+    networkAccess: true
+baseCommand: ["python", "/opt/run_3DCellComposer.py"]
 
 inputs:
   input_dir:
     type: Directory
     inputBinding:
       position: 0
+  nucleus_markers:
+    type: string
+    inputBinding:
+      position: 1
+  cytoplasm_markers:
+    type: string
+    inputBinding:
+      position: 2
+  membrane_markers:
+    type: string
+    inputBinding:
+      position: 3
 outputs:
-  mask_image_dir:
+  results_dir:
     type: Directory
     outputBinding:
-      glob: "mask"
+      glob: "results"
