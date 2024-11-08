@@ -8,6 +8,7 @@ from utils import find_expr_image, output_path
 
 def main(input_data_dir: Path):
     dest = output_path / "expr"
+    dest.mkdir(exist_ok=True, parents=True)
     expr_image = find_expr_image(input_data_dir)
     print("Copying", expr_image, "to", dest)
     copy(expr_image, dest)

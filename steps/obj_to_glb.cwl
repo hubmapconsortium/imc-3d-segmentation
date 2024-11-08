@@ -11,6 +11,10 @@ inputs:
     type: Directory
     inputBinding:
       position: 0
+  object_id_mapping:
+    type: File
+    inputBinding:
+      position: 1
 outputs:
   glb_mesh_dir:
     type: Directory
