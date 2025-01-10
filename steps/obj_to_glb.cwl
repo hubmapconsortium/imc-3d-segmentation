@@ -3,7 +3,7 @@ class: CommandLineTool
 label: Convert OBJ formats to GLB after geometry cleanups
 requirements:
   DockerRequirement:
-      dockerPull: hubmap/3d_mask_convert:2.0
+      dockerPull: hubmap/3d_mask_convert:latest
 baseCommand: "/opt/obj_to_glb.py"
 
 inputs:

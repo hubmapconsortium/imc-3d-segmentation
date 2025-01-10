@@ -3,7 +3,7 @@ class: CommandLineTool
 label: Copy expression image to output directory
 requirements:
   DockerRequirement:
-      dockerPull: hubmap/3d_convert_to_ometiff:2.0
+      dockerPull: hubmap/3d_convert_to_ometiff:latest
 baseCommand: "/opt/copy_expr_image.py"
 
 inputs:
