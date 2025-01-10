@@ -3,7 +3,7 @@ class: CommandLineTool
 label: Consolidate individual masks to multichannel OME-TIFF
 requirements:
   DockerRequirement:
-      dockerPull: hubmap/3d_convert_to_ometiff:latest
+      dockerPull: hubmap/3d_convert_to_ometiff:2.1
 baseCommand: "/opt/convert_to_ometiff.py"
 
 inputs:

@@ -3,7 +3,7 @@ class: CommandLineTool
 label: 3D segmentation for IMC
 requirements:
   DockerRequirement:
-      dockerPull: hubmap/imc_3d_segmentation:latest
+      dockerPull: hubmap/imc_3d_segmentation:2.1
   DockerGpuRequirement: {}
   NetworkAccess:
     networkAccess: true
