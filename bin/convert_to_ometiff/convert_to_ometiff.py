@@ -5,11 +5,11 @@ from pathlib import Path
 from shutil import copy
 from typing import Iterable
 
-import aicsimageio.types
+import bioio
 import numpy as np
 import ome_utils
 import tifffile
-from aicsimageio.writers.ome_tiff_writer import OmeTiffWriter
+from bioio.writers import OmeTiffWriter
 
 from utils import find_expr_image, output_path
 
@@ -42,7 +42,7 @@ def main(input_data_dir: Path, results_dir: Path, output_path: Path):
     expr_image = find_expr_image(input_data_dir)
     with tifffile.TiffFile(expr_image) as tf:
         physical_pixel_sizes = ome_utils.get_converted_physical_size(tf)
-    pps = aicsimageio.types.PhysicalPixelSizes(
+    pps = bioio.PhysicalPixelSizes(
         **{dim: size.magnitude for dim, size in physical_pixel_sizes.items()}
     )
 

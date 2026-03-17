@@ -1,6 +1,6 @@
-aicsimageio[bfio]
+bioio
 manhole
-numpy<2
+numpy
 tifffile
 
-git+https://github.com/hubmapconsortium/ome-utils@v0.3.1
+git+https://github.com/hubmapconsortium/ome-utils@v0.3.6
