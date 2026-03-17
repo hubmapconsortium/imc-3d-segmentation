@@ -20,7 +20,7 @@ def convert(obj_file: Path, glb_file: Path, mapping: Dict[str, int]):
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete()
 
-    bpy.ops.import_scene.obj(
+    bpy.ops.wm.obj_import(
         filepath=fspath(obj_file),
         use_split_groups=True,
     )
