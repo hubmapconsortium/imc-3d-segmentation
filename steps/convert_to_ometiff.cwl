@@ -20,7 +20,3 @@ outputs:
     type: Directory
     outputBinding:
       glob: "pipeline_output"
-  object_id_mapping:
-    type: File
-    outputBinding:
-      glob: "object_id_mapping.json"

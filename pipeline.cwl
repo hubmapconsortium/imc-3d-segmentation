@@ -52,7 +52,7 @@ steps:
         source: input_dir
       segmentation_results_dir:
         source: segmentation/results_dir
-    out: [mask, object_id_mapping]
+    out: [mask]
     run: steps/convert_to_ometiff.cwl
     label: "Segmentation mask consolidation to OME-TIFF"
   copy_expr_image:
@@ -67,9 +67,6 @@ steps:
       input_dir:
         source:
           segmentation/results_dir
-      object_id_mapping:
-        source:
-          convert_to_ometiff/object_id_mapping
     out: [glb_mesh_dir]
     run: steps/obj_to_glb.cwl
     label: "OBJ -> GLB conversion"
