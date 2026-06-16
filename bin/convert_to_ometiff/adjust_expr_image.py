@@ -75,7 +75,6 @@ def main(
             photometric="minisblack",
             description=ome_str,
         )
-    copy(expr_image, dest)
 
 
 def parse_marker_list(arg):
