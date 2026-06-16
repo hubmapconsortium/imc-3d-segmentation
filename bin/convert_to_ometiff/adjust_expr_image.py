@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from argparse import ArgumentParser
 from io import BytesIO
 from pathlib import Path
+from pprint import pprint
 from shutil import copy
 
 import tifffile
@@ -54,10 +55,12 @@ def main(
     cytoplasm: list[str],
     membrane: list[str],
 ):
-    dest = output_path / "expr"
-    dest.mkdir(exist_ok=True, parents=True)
     expr_image = find_expr_image(input_data_dir)
+    dest = output_path / "expr" / expr_image.name
+    dest.parent.mkdir(exist_ok=True, parents=True)
     channel_metadata = {"Nucleus": nucleus, "Cytoplasm": cytoplasm, "Cell": membrane}
+    print("Channel metadata:")
+    pprint(channel_metadata)
     with tifffile.TiffFile(expr_image) as TF:
         xml_str = TF.ome_metadata
         ome_xml = strip_namespace(xml_str)
@@ -65,7 +68,7 @@ def main(
     add_sa_segmentation_channels_info(ome_xml, channel_metadata)
     ome_str = ET.tostring(ome_xml, xml_declaration=True, encoding="utf-8")
     print("Writing expression image to", dest)
-    with tifffile.TiffWriter(dest / expr_image.name, bigtiff=True, shaped=False) as TW:
+    with tifffile.TiffWriter(dest, bigtiff=True, shaped=False) as TW:
         TW.write(
             img_stack,
             contiguous=True,
