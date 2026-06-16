@@ -65,7 +65,7 @@ def main(
     add_sa_segmentation_channels_info(ome_xml, channel_metadata)
     ome_str = ET.tostring(ome_xml, xml_declaration=True, encoding="utf-8")
     print("Writing expression image to", dest)
-    with tifffile.TiffWriter(dest, bigtiff=True, shaped=False) as TW:
+    with tifffile.TiffWriter(dest / expr_image.name, bigtiff=True, shaped=False) as TW:
         TW.write(
             img_stack,
             contiguous=True,
