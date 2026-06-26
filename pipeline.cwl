@@ -28,9 +28,9 @@ outputs:
     type: Directory
     label: "GLB directory"
   expr_image:
-    outputSource: copy_expr_image/image_dir
+    outputSource: adjust_expr_image/image_dir
     type: Directory
-    label: "Expression image used as input"
+    label: "Expression image used as input, with additional OME-XML metadata"
 
 steps:
   segmentation:
@@ -52,24 +52,27 @@ steps:
         source: input_dir
       segmentation_results_dir:
         source: segmentation/results_dir
-    out: [mask, object_id_mapping]
+    out: [mask]
     run: steps/convert_to_ometiff.cwl
     label: "Segmentation mask consolidation to OME-TIFF"
-  copy_expr_image:
+  adjust_expr_image:
     in:
       input_dir:
         source: input_dir
+      nucleus_markers:
+        source: nucleus_markers
+      cytoplasm_markers:
+        source: cytoplasm_markers
+      membrane_markers:
+        source: membrane_markers
     out: [image_dir]
-    run: steps/copy_expr_image.cwl
+    run: steps/adjust_expr_image.cwl
     label: "Copy expression image to output dir"
   obj_to_glb:
     in:
       input_dir:
         source:
           segmentation/results_dir
-      object_id_mapping:
-        source:
-          convert_to_ometiff/object_id_mapping
     out: [glb_mesh_dir]
     run: steps/obj_to_glb.cwl
     label: "OBJ -> GLB conversion"

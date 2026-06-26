@@ -1,13 +1,10 @@
 cwlVersion: v1.1
 class: CommandLineTool
-label: 3D segmentation for IMC
+label: Copy expression image to output directory
 requirements:
   DockerRequirement:
-      dockerPull: hubmap/imc_3d_segmentation:latest
-  DockerGpuRequirement: {}
-  NetworkAccess:
-    networkAccess: true
-baseCommand: ["python", "/opt/run_3DCellComposer.py"]
+      dockerPull: hubmap/3d_convert_to_ometiff:latest
+baseCommand: "/opt/adjust_expr_image.py"
 
 inputs:
   input_dir:
@@ -18,16 +15,19 @@ inputs:
     type: string
     inputBinding:
       position: 1
+      prefix: "--nucleus"
   cytoplasm_markers:
     type: string
     inputBinding:
       position: 2
+      prefix: "--cytoplasm"
   membrane_markers:
     type: string
     inputBinding:
       position: 3
+      prefix: "--membrane"
 outputs:
-  results_dir:
+  image_dir:
     type: Directory
     outputBinding:
-      glob: "results"
+      glob: "pipeline_output"

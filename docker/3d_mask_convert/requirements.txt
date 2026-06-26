@@ -1,4 +1,3 @@
-aicsimageio[bfio]~=4.7
 manhole
 numpy
 scikit-image
